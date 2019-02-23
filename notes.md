@@ -28,7 +28,6 @@
 * Bootloader/OTA updates
 * Low Power Mode
 * Logging
-* CI
 * Unit Testing
 * Hardware in the Loop testing
 * 6LoWPAN
@@ -36,12 +35,10 @@
 * Gateway Router
 * Messaging/Protocol/Serialization/Deserialization
 
-# Things to do today
+# Things already done
 
-
-# TO-DONE
-
-* Get the project set up
-* Get CI set up
-* Get HAL and RTFM set up
-* blink the first LED
+* 2019-02-23
+    * Get the project set up
+    * Get CI set up
+    * Get HAL and RTFM set up
+    * Blink the first LED

@@ -38,6 +38,9 @@
 
 # Things to do today
 
+
+# TO-DONE
+
 * Get the project set up
 * Get CI set up
 * Get HAL and RTFM set up

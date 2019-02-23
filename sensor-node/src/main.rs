@@ -1,9 +1,8 @@
 #![no_main]
 #![no_std]
 
-
+#[allow(unused_imports)]
 use panic_halt;
-
 
 use cortex_m_rt::entry;
 use dwm1001;

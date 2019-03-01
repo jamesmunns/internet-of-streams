@@ -42,3 +42,8 @@
     * Get CI set up
     * Get HAL and RTFM set up
     * Blink the first LED
+
+# Things to do today
+
+* Get COBS working
+* Get UARTE working

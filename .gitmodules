@@ -1,3 +1,6 @@
 [submodule "vendor/cobs.rs"]
 	path = vendor/cobs.rs
 	url = https://github.com/ferrous-systems/cobs.rs.git
+[submodule "vendor/nrf52-hal"]
+	path = vendor/nrf52-hal
+	url = https://github.com/nrf-rs/nrf52-hal.git

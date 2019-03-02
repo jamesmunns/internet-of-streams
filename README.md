@@ -19,8 +19,17 @@ You can find a [playlist of all videos here](https://www.youtube.com/playlist?li
     * Get CI set up
     * Get HAL and RTFM set up
     * Blink the first LED
+* [2019-02-28] - COBS Encoding for Serial Framing
+    * Finish up a PR to get a streaming COBS encoder
+* [2019-03-02] - Async DMA UARTE - Part 1
+    * Get nrf52-hal vendored
+    * Update some old code
+    * Try to work around RTFM limitations
+    * see the `uarte` branch for WIP
 
 [2019-02-23]: https://www.youtube.com/watch?v=S0VI70nY6Vo
+[2019-02-28]: https://youtu.be/mnPbmPqKf1s
+[2019-03-02]: https://youtu.be/O6KeMpnLRkI
 
 ## Future Topics
 

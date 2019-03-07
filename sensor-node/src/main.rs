@@ -13,7 +13,7 @@ use dwm1001::{
         prelude::*,
         timer::Timer,
         gpio::{Pin, Output, PushPull, Level},
-        uarte::{Uarte, Pins, Parity as UartParity, Baudrate as UartBaudrate},
+        uarte::{Pins, Parity as UartParity, Baudrate as UartBaudrate},
     },
     // DWM1001,
     // Led,
@@ -21,15 +21,18 @@ use dwm1001::{
 
 use nrf52832_pac::{
     TIMER0,
-    UARTE0,
 };
 
+mod logger;
+use logger::Logger;
+
+const MEME: &str = "Did you ever hear the tragedy of Darth Plagueis The Wise? I thought not. It's not a story the Jedi would tell you. It's a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to create life… He had such a knowledge of the dark side that he could even keep the ones he cared about from dying. The dark side of the Force is a pathway to many abilities some consider to be unnatural. He became so powerful… the only thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he taught his apprentice everything he knew, then his apprentice killed him in his sleep. Ironic. He could save others from death, but not himself.";
 
 #[app(device = nrf52832_pac)]
 const APP: () = {
     static mut LED_RED_1: Pin<Output<PushPull>>     = ();
     static mut TIMER:     Timer<TIMER0>             = ();
-    static mut UARTE:     Uarte<UARTE0>             = ();
+    static mut LOGGER:    Logger                    = ();
 
     #[init]
     fn init() {
@@ -42,29 +45,24 @@ const APP: () = {
                 rts: None,
             },
             UartParity::EXCLUDED,
-            UartBaudrate::BAUD115200,
+            UartBaudrate::BAUD1M,
         );
 
-        UARTE = uarte0;
+        LOGGER = Logger::new(uarte0);
         TIMER = timer;
         LED_RED_1 = pins.p0_14.degrade().into_push_pull_output(Level::High);
     }
 
-    #[idle(resources = [TIMER, LED_RED_1, UARTE])]
+    #[idle(resources = [TIMER, LED_RED_1, LOGGER])]
     fn idle() -> ! {
-
-        let msg = "hello, world!\r\n";
-        let mut scratch = [0u8; 512];
-        scratch[..msg.len()].copy_from_slice(msg.as_bytes());
-        let ref_msg = &scratch[..msg.len()];
 
         loop {
             (*resources.LED_RED_1).set_low();
-            delay(resources.TIMER, 20_000); // 20ms
+            delay(resources.TIMER, 500_000);
             (*resources.LED_RED_1).set_high();
-            delay(resources.TIMER, 230_000); // 230ms
+            delay(resources.TIMER, 500_000);
 
-            resources.UARTE.write(ref_msg).unwrap();
+            resources.LOGGER.log(MEME).unwrap();
         }
     }
 };

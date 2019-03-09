@@ -14,22 +14,27 @@ This project is sponsored by [Ferrous Systems](https://ferrous-systems.com). Int
 
 You can find a [playlist of all videos here](https://www.youtube.com/playlist?list=PLX44HkctSkTewrL9frlUz0yeKLKecebT1) on YouTube.
 
-* [2019-02-23] - Hello Blinky World!
+* [2019-02-23] - **Hello Blinky World!**
     * Get the project set up
     * Get CI set up
     * Get HAL and RTFM set up
     * Blink the first LED
-* [2019-02-28] - COBS Encoding for Serial Framing
+* [2019-02-28] - **COBS Encoding for Serial Framing**
     * Finish up a PR to get a streaming COBS encoder
-* [2019-03-02] - Async DMA UARTE - Part 1
+* [2019-03-02] - **Async DMA UARTE - Part 1**
     * Get nrf52-hal vendored
     * Update some old code
     * Try to work around RTFM limitations
     * see the `uarte` branch for WIP
+* [2019-03-07] - **Simple Blocking UART Logger**
+    * Send data over the UART
+    * Provide log/warn/err levels
+    * Send data larger than a single 255 byte transaction
 
-[2019-02-23]: https://www.youtube.com/watch?v=S0VI70nY6Vo
+[2019-02-23]: https://youtu.be/S0VI70nY6Vo
 [2019-02-28]: https://youtu.be/mnPbmPqKf1s
 [2019-03-02]: https://youtu.be/O6KeMpnLRkI
+[2019-03-07]: https://youtu.be/WYIei1MpVe4
 
 ## Future Topics
 
@@ -45,6 +50,7 @@ The following topics are planned to be addressed in future streams:
 * Bluetooth
 * Gateway Router
 * Messaging/Protocol/Serialization/Deserialization
+* LED status codes
 
 ## License
 

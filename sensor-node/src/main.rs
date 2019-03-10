@@ -2,10 +2,13 @@
 #![no_std]
 
 #[allow(unused_imports)]
-use panic_halt;
+use panic_ramdump;
 
 use dwm1001;
-use nb::block;
+use nb::{
+    block,
+    Error as NbError,
+};
 use rtfm::app;
 
 use dwm1001::{
@@ -14,9 +17,13 @@ use dwm1001::{
         prelude::*,
         timer::Timer,
         gpio::{Pin, Output, PushPull, Level},
+        rng::Rng,
         spim::{Spim, Pins as SpimPins},
         uarte::{Pins as UartePins, Parity as UartParity, Baudrate as UartBaudrate},
     },
+    dw1000::{
+        mac::Address,
+    }
     // DWM1001,
     // Led,
 };
@@ -26,14 +33,44 @@ use nrf52832_pac::{
     SPIM2,
 };
 
+use heapless::{String, consts::*};
+
 use dw1000::{DW1000 as DW};
+use core::fmt::Write;
 
 mod logger;
 mod dwm1001_local;
 use logger::Logger;
 use dwm1001_local::DW_RST;
 
-const MEME: &str = "Did you ever hear the tragedy of Darth Plagueis The Wise? I thought not. It's not a story the Jedi would tell you. It's a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to create life… He had such a knowledge of the dark side that he could even keep the ones he cared about from dying. The dark side of the Force is a pathway to many abilities some consider to be unnatural. He became so powerful… the only thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he taught his apprentice everything he knew, then his apprentice killed him in his sleep. Ironic. He could save others from death, but not himself.";
+use serde;
+use serde_derive::{Deserialize, Serialize};
+use ssmarshal::{serialize, deserialize};
+
+
+#[derive(Debug, Deserialize, Serialize)]
+struct DemoMessage {
+    small:  u8,
+    medium: u32,
+    large: u64,
+    text_bytes: [u8; 32],
+}
+
+impl DemoMessage {
+    fn rand(rng: &mut Rng) -> Self {
+        let start = (rng.random_u32() % ((MEME.len() - 32) as u32)) as usize;
+        let mut strbuf = [0u8; 32];
+        strbuf.copy_from_slice(&MEME.as_bytes()[start..(start+32)]);
+        Self {
+            small: rng.random_u8(),
+            medium: rng.random_u32(),
+            large: rng.random_u64(),
+            text_bytes: strbuf
+        }
+    }
+}
+
+const MEME: &str = "Did you ever hear the tragedy of Darth Plagueis The Wise? I thought not. It's not a story the Jedi would tell you. It's a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to create life... He had such a knowledge of the dark side that he could even keep the ones he cared about from dying. The dark side of the Force is a pathway to many abilities some consider to be unnatural. He became so powerful... the only thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he taught his apprentice everything he knew, then his apprentice killed him in his sleep. Ironic. He could save others from death, but not himself.";
 
 #[app(device = nrf52832_pac)]
 const APP: () = {
@@ -46,6 +83,7 @@ const APP: () = {
                             dw1000::Ready,
                           > = ();
     static mut DW_RST_PIN: DW_RST                   = ();
+    static mut RANDOM:     Rng                      = ();
 
     #[init]
     fn init() {
@@ -60,6 +98,8 @@ const APP: () = {
             UartParity::EXCLUDED,
             UartBaudrate::BAUD115200,
         );
+
+        let rng = device.RNG.constrain();
 
         let spim2 = device.SPIM2.constrain(SpimPins {
             sck : pins.p0_16.into_push_pull_output(Level::Low).degrade(),
@@ -78,6 +118,7 @@ const APP: () = {
 
         let dw1000 = dw1000.init().unwrap();
 
+        RANDOM = rng;
         DW_RST_PIN = rst_pin;
         DW1000 = dw1000;
         LOGGER = Logger::new(uarte0);
@@ -85,21 +126,65 @@ const APP: () = {
         LED_RED_1 = pins.p0_14.degrade().into_push_pull_output(Level::High);
     }
 
-    #[idle(resources = [TIMER, LED_RED_1, LOGGER])]
+    #[idle(resources = [TIMER, LED_RED_1, LOGGER, RANDOM, DW1000])]
     fn idle() -> ! {
-
+        let mut scratch = [0u8; 4096];
         loop {
-            (*resources.LED_RED_1).set_low();
-            delay(resources.TIMER, 500_000);
-            (*resources.LED_RED_1).set_high();
-            delay(resources.TIMER, 500_000);
+            let message = DemoMessage::rand(&mut resources.RANDOM);
 
-            resources.LOGGER.log(MEME).unwrap();
+            let sz = serialize(&mut scratch, &message).expect("ser fail");
+
+            block!(resources.DW1000.send(
+                &scratch[..sz],
+                Address::broadcast(),
+                None
+            ).expect("tx fail").wait()).expect("tx fail block");
+            resources.LOGGER.log("Sent hello").expect("hello fail");
+
+            let mut rx_fut = resources.DW1000.receive().expect("rx fut fail");
+
+            let a_time = 250_000 + (resources.RANDOM.random_u32() & 0x7_FFFF);
+            let b_time = 250_000 + (resources.RANDOM.random_u32() & 0x7_FFFF);
+
+            (*resources.LED_RED_1).set_low();
+            delay(resources.TIMER, a_time);
+            (*resources.LED_RED_1).set_high();
+            delay(resources.TIMER, b_time);
+
+
+            match rx_fut.wait(&mut scratch) {
+                Ok(msg) => {
+                    match deserialize::<DemoMessage>(msg.frame.payload) {
+                        Ok((val, _)) => {
+                            let mut out: String<U256> = String::new();
+                            write!(&mut out, "got message! \r\n");
+                            write!(&mut out, "small: {:016X}\r\n", val.small);
+                            write!(&mut out, "med:   {:016X}\r\n", val.medium);
+                            write!(&mut out, "large  {:016X}\r\n", val.large);
+                            write!(&mut out, "text: {}\r\n", ::core::str::from_utf8(&val.text_bytes).unwrap());
+                            resources.LOGGER.log(out.as_str()).unwrap();
+                        }
+                        _ => {
+                            resources.LOGGER.error("failed to deser");
+                        }
+                    }
+                },
+                Err(NbError::WouldBlock) => {
+                    resources.LOGGER.log("No Packet!").expect("no log fail");
+                },
+                Err(e) => {
+                    let mut out: String<U256> = String::new();
+                    write!(&mut out, "rx fail: {:?}", e);
+                    resources.LOGGER.error(out.as_str()).unwrap();
+                }
+            }
+
+            resources.DW1000.force_idle().expect("idle fail");
         }
     }
 };
 
 fn delay<T>(timer: &mut Timer<T>, cycles: u32) where T: TimerExt {
     timer.start(cycles);
-    block!(timer.wait()).unwrap();
+    block!(timer.wait()).expect("wait fail");
 }

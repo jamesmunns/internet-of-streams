@@ -319,7 +319,9 @@ name = "sensor-node"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rtfm 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "dw1000 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "dwm1001 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nb 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "nrf52832-pac 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "panic-halt 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",

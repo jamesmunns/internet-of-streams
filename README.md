@@ -30,11 +30,17 @@ You can find a [playlist of all videos here](https://www.youtube.com/playlist?li
     * Send data over the UART
     * Provide log/warn/err levels
     * Send data larger than a single 255 byte transaction
+* [2019-03-10] - **Radio Work and `no_std` Serde**
+    * Get messages sending periodically
+    * Receive incoming messages
+    * Use the hardware random number generator
+    * Serialize/Deserialize messages with `ssmarshal` and `serde`
 
 [2019-02-23]: https://youtu.be/S0VI70nY6Vo
 [2019-02-28]: https://youtu.be/mnPbmPqKf1s
 [2019-03-02]: https://youtu.be/O6KeMpnLRkI
 [2019-03-07]: https://youtu.be/WYIei1MpVe4
+[2019-03-10]: https://youtu.be/U2rC24XGtTk
 
 ## Future Topics
 

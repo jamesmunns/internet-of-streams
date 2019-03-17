@@ -16,16 +16,17 @@ use dwm1001::{
         delay::Delay,
         prelude::*,
         timer::Timer,
-        gpio::{Pin, Output, PushPull, Level},
+        gpio::{Pin, Output, PushPull, Level, p0::P0_17},
         rng::Rng,
-        spim::{Spim, Pins as SpimPins},
-        uarte::{Pins as UartePins, Parity as UartParity, Baudrate as UartBaudrate},
+        spim::{Spim},
     },
     dw1000::{
         mac::Address,
-    }
-    // DWM1001,
-    // Led,
+    },
+    new_dw1000,
+    new_usb_uarte,
+    UsbUarteConfig,
+    DW_RST,
 };
 
 use nrf52832_pac::{
@@ -39,11 +40,11 @@ use dw1000::{DW1000 as DW};
 use core::fmt::Write;
 
 mod logger;
-mod dwm1001_local;
 use logger::Logger;
-use dwm1001_local::DW_RST;
 
+#[allow(unused_imports)]
 use serde;
+
 use serde_derive::{Deserialize, Serialize};
 use ssmarshal::{serialize, deserialize};
 
@@ -79,7 +80,7 @@ const APP: () = {
     static mut LOGGER:    Logger                    = ();
     static mut DW1000:    DW<
                             Spim<SPIM2>,
-                            Pin<Output<PushPull>>,
+                            P0_17<Output<PushPull>>,
                             dw1000::Ready,
                           > = ();
     static mut DW_RST_PIN: DW_RST                   = ();
@@ -89,25 +90,23 @@ const APP: () = {
     fn init() {
         let timer = device.TIMER0.constrain();
         let pins = device.P0.split();
-        let uarte0 = device.UARTE0.constrain(UartePins {
-                txd: pins.p0_05.into_push_pull_output(Level::High).degrade(),
-                rxd: pins.p0_11.into_floating_input().degrade(),
-                cts: None,
-                rts: None,
-            },
-            UartParity::EXCLUDED,
-            UartBaudrate::BAUD115200,
+        let uarte0 = new_usb_uarte(
+            device.UARTE0,
+            pins.p0_05,
+            pins.p0_11,
+            UsbUarteConfig::default(),
         );
 
         let rng = device.RNG.constrain();
 
-        let spim2 = device.SPIM2.constrain(SpimPins {
-            sck : pins.p0_16.into_push_pull_output(Level::Low).degrade(),
-            mosi: Some(pins.p0_20.into_push_pull_output(Level::Low).degrade()),
-            miso: Some(pins.p0_18.into_floating_input().degrade()),
-        });
-        let dw_cs = pins.p0_17.degrade().into_push_pull_output(Level::High);
-        let dw1000 = DW::new(spim2, dw_cs);
+        let dw1000 = new_dw1000(
+            device.SPIM2,
+            pins.p0_16,
+            pins.p0_20,
+            pins.p0_18,
+            pins.p0_17,
+        );
+
         let mut rst_pin = DW_RST::new(pins.p0_24.into_floating_input());
 
         let clocks = device.CLOCK.constrain().freeze();
@@ -157,15 +156,15 @@ const APP: () = {
                     match deserialize::<DemoMessage>(msg.frame.payload) {
                         Ok((val, _)) => {
                             let mut out: String<U256> = String::new();
-                            write!(&mut out, "got message! \r\n");
-                            write!(&mut out, "small: {:016X}\r\n", val.small);
-                            write!(&mut out, "med:   {:016X}\r\n", val.medium);
-                            write!(&mut out, "large  {:016X}\r\n", val.large);
-                            write!(&mut out, "text: {}\r\n", ::core::str::from_utf8(&val.text_bytes).unwrap());
+                            write!(&mut out, "got message! \r\n").unwrap();
+                            write!(&mut out, "small: {:016X}\r\n", val.small).unwrap();
+                            write!(&mut out, "med:   {:016X}\r\n", val.medium).unwrap();
+                            write!(&mut out, "large  {:016X}\r\n", val.large).unwrap();
+                            write!(&mut out, "text: {}\r\n", ::core::str::from_utf8(&val.text_bytes).unwrap()).unwrap();
                             resources.LOGGER.log(out.as_str()).unwrap();
                         }
                         _ => {
-                            resources.LOGGER.error("failed to deser");
+                            resources.LOGGER.error("failed to deser").unwrap();
                         }
                     }
                 },
@@ -174,7 +173,7 @@ const APP: () = {
                 },
                 Err(e) => {
                     let mut out: String<U256> = String::new();
-                    write!(&mut out, "rx fail: {:?}", e);
+                    write!(&mut out, "rx fail: {:?}", e).unwrap();
                     resources.LOGGER.error(out.as_str()).unwrap();
                 }
             }

@@ -1,0 +1,13 @@
+[package]
+name = "utils"
+version = "0.1.0"
+authors = ["James Munns <james.munns@ferrous-systems.com>"]
+edition = "2018"
+
+[dependencies]
+nb = "0.1.1"
+
+
+[dependencies.nrf52832-hal]
+version = "0.7"
+default-features = false

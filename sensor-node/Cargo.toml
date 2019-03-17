@@ -17,17 +17,17 @@ heapless        = "0.4.2"
 version       = "=1.0.0"
 default-features = false
 
-[dependencies.serde]
-version = "=1.0.85"
-default-features = false
-
-[dependencies.serde_derive]
-version = "=1.0.85"
-
 [dependencies.dwm1001]
 version = "0.1.0"
 features = [ "dev", "rt" ]
 
-[patch.crates-io.dwm1001]
-git = "https://github.com/braun-robotics/rust-dwm1001"
-rev = "construct-by-parts"
+# Local workspace deps
+
+[dependencies.uarte-logger]
+path = "../uarte-logger"
+
+[dependencies.utils]
+path = "../utils"
+
+[dependencies.protocol]
+path = "../protocol"

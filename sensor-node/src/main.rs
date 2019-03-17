@@ -1,17 +1,13 @@
 #![no_main]
 #![no_std]
 
-#[allow(unused_imports)]
-use panic_ramdump;
+// Built in dependencies
+use core::fmt::Write;
 
-use dwm1001;
-use nb::{
-    block,
-    Error as NbError,
-};
-use rtfm::app;
-
+// Crates.io dependencies
+use dw1000::{DW1000 as DW};
 use dwm1001::{
+    self,
     nrf52832_hal::{
         delay::Delay,
         prelude::*,
@@ -19,6 +15,10 @@ use dwm1001::{
         gpio::{Pin, Output, PushPull, Level, p0::P0_17},
         rng::Rng,
         spim::{Spim},
+        nrf52832_pac::{
+            TIMER0,
+            SPIM2,
+        },
     },
     dw1000::{
         mac::Address,
@@ -28,50 +28,25 @@ use dwm1001::{
     UsbUarteConfig,
     DW_RST,
 };
-
-use nrf52832_pac::{
-    TIMER0,
-    SPIM2,
-};
-
 use heapless::{String, consts::*};
-
-use dw1000::{DW1000 as DW};
-use core::fmt::Write;
-
-mod logger;
-use logger::Logger;
-
-#[allow(unused_imports)]
-use serde;
-
-use serde_derive::{Deserialize, Serialize};
+use nb::{
+    block,
+    Error as NbError,
+};
+use rtfm::app;
 use ssmarshal::{serialize, deserialize};
 
+// NOTE: Panic Provider
+use panic_ramdump as _;
 
-#[derive(Debug, Deserialize, Serialize)]
-struct DemoMessage {
-    small:  u8,
-    medium: u32,
-    large: u64,
-    text_bytes: [u8; 32],
-}
+// NOTE: Must explicitly pull in for RTFM
+use nrf52832_pac;
 
-impl DemoMessage {
-    fn rand(rng: &mut Rng) -> Self {
-        let start = (rng.random_u32() % ((MEME.len() - 32) as u32)) as usize;
-        let mut strbuf = [0u8; 32];
-        strbuf.copy_from_slice(&MEME.as_bytes()[start..(start+32)]);
-        Self {
-            small: rng.random_u8(),
-            medium: rng.random_u32(),
-            large: rng.random_u64(),
-            text_bytes: strbuf
-        }
-    }
-}
+// Workspace dependencies
+use protocol::DemoMessage;
+use uarte_logger::Logger;
+use utils::delay;
 
-const MEME: &str = "Did you ever hear the tragedy of Darth Plagueis The Wise? I thought not. It's not a story the Jedi would tell you. It's a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to create life... He had such a knowledge of the dark side that he could even keep the ones he cared about from dying. The dark side of the Force is a pathway to many abilities some consider to be unnatural. He became so powerful... the only thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he taught his apprentice everything he knew, then his apprentice killed him in his sleep. Ironic. He could save others from death, but not himself.";
 
 #[app(device = nrf52832_pac)]
 const APP: () = {
@@ -150,7 +125,6 @@ const APP: () = {
             (*resources.LED_RED_1).set_high();
             delay(resources.TIMER, b_time);
 
-
             match rx_fut.wait(&mut scratch) {
                 Ok(msg) => {
                     match deserialize::<DemoMessage>(msg.frame.payload) {
@@ -182,8 +156,3 @@ const APP: () = {
         }
     }
 };
-
-fn delay<T>(timer: &mut Timer<T>, cycles: u32) where T: TimerExt {
-    timer.start(cycles);
-    block!(timer.wait()).expect("wait fail");
-}

@@ -9,5 +9,4 @@ install:
   - rustup target add thumbv7em-none-eabihf
 
 script:
-- cd sensor-node
-- cargo build
+- cargo build --all

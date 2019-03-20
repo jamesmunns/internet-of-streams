@@ -97,8 +97,8 @@ dependencies = [
 
 [[package]]
 name = "dwm1001"
-version = "0.1.0"
-source = "git+https://github.com/braun-robotics/rust-dwm1001?rev=construct-by-parts#7574aee00133182d75809dd52b8d20b33cb0b581"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "cortex-m 0.5.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "cortex-m-rt 0.6.7 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -333,7 +333,7 @@ version = "0.1.0"
 dependencies = [
  "cortex-m-rtfm 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "dw1000 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "dwm1001 0.1.0 (git+https://github.com/braun-robotics/rust-dwm1001?rev=construct-by-parts)",
+ "dwm1001 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nb 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -449,7 +449,7 @@ dependencies = [
 "checksum cortex-m-rtfm-macros 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)" = "a25f736f4c63385e923036a9708a8447b21a7a46299bdd3678f81d1f36d7c990"
 "checksum cortex-m-semihosting 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "d1dc2abec1a772e8bb697cad17d5710f180043caf8939820f0f6ba4b7ae2a4b5"
 "checksum dw1000 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8f77c3702f744259a3546f52a93b0818cb8ef35e8f2d5ae2fbc26ebdfcb79f31"
-"checksum dwm1001 0.1.0 (git+https://github.com/braun-robotics/rust-dwm1001?rev=construct-by-parts)" = "<none>"
+"checksum dwm1001 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "5b9b30a132752b1550fd88f09001d86a9fadf1d20cd248b6e1350feb970715d5"
 "checksum embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "9880e55238830314d41d88f1ac7a819d495799c3cc3bc392cc172bab26428c33"
 "checksum encode_unicode 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)" = "90b2c9496c001e8cb61827acdefad780795c42264c137744cae6f7d9e3450abd"
 "checksum generic-array 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)" = "8107dafa78c80c848b71b60133954b4a58609a3a1a5f9af037ecc7f67280f369"

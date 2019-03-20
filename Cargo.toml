@@ -8,7 +8,3 @@ members = [
     "protocol",
 ]
 
-
-[patch.crates-io.dwm1001]
-git = "https://github.com/braun-robotics/rust-dwm1001"
-rev = "construct-by-parts"

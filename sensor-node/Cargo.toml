@@ -18,7 +18,7 @@ version       = "=1.0.0"
 default-features = false
 
 [dependencies.dwm1001]
-version = "0.1.0"
+version = "0.1.1"
 features = [ "dev", "rt" ]
 
 # Local workspace deps

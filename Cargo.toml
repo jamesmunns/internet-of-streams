@@ -3,6 +3,7 @@
 members = [
     "sensor-node",
     "uarte-logger",
+    "hack",
 
     "utils",
     "protocol",

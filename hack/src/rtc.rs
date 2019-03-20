@@ -18,8 +18,17 @@ pub trait RtcExt : Deref<Target=rtc0::RegisterBlock> + Sized {
     fn constrain(self) -> Rtc<Self, Stopped>;
 }
 
-impl<T> RtcExt for T where T: RtcExt {
-    fn constrain(self) -> Rtc<T, Stopped> {
+// impl<T> RtcExt for T where T: RtcExt {
+//     fn constrain(self) -> Rtc<T, Stopped> {
+//         Rtc {
+//             periph: self,
+//             mode: Stopped,
+//         }
+//     }
+// }
+
+impl RtcExt for RTC0 {
+    fn constrain(self) -> Rtc<RTC0, Stopped> {
         Rtc {
             periph: self,
             mode: Stopped,
@@ -45,6 +54,9 @@ pub enum RtcCompareReg {
 
 impl<T, M> Rtc<T, M> where T: RtcExt {
     pub fn enable_counter(self) -> Rtc<T, Started> {
+        unsafe {
+            self.periph.tasks_start.write(|w| w.bits(1));
+        }
         Rtc {
             periph: self.periph,
             mode: Started,
@@ -52,6 +64,9 @@ impl<T, M> Rtc<T, M> where T: RtcExt {
     }
 
     pub fn disable_counter(self) -> Rtc<T, Stopped> {
+        unsafe {
+            self.periph.tasks_stop.write(|w| w.bits(1));
+        }
         Rtc {
             periph: self.periph,
             mode: Stopped,
@@ -106,7 +121,7 @@ impl<T, M> Rtc<T, M> where T: RtcExt {
         }
     }
 
-    pub fn get_event(&mut self, evt: RtcInterrupt, clear_on_read: bool) -> bool {
+    pub fn get_event_triggered(&mut self, evt: RtcInterrupt, clear_on_read: bool) -> bool {
         use RtcInterrupt::*;
         let mut orig = 0;
         let set_val = if clear_on_read { 1 } else { 0 };
@@ -185,6 +200,7 @@ impl<T, M> Rtc<T, M> where T: RtcExt {
     }
 }
 
+#[derive(Debug, PartialEq, Eq)]
 pub enum Error {
     PrescalerOutOfRange,
     CompareOutOfRange,

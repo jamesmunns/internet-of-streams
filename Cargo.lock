@@ -136,7 +136,7 @@ version = "0.1.0"
 dependencies = [
  "cortex-m-rtfm 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "dw1000 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "dwm1001 0.1.0 (git+https://github.com/braun-robotics/rust-dwm1001?rev=construct-by-parts)",
+ "dwm1001 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nb 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",

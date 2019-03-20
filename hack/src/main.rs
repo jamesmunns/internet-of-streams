@@ -20,6 +20,8 @@ use dwm1001::{
         nrf52832_pac::{
             TIMER0,
             SPIM2,
+            RTC0 as RTC0_PERIPHERAL,
+            Interrupt,
         },
     },
     dw1000::{
@@ -50,6 +52,7 @@ use uarte_logger::Logger;
 use utils::delay;
 
 mod rtc;
+use crate::rtc::{Rtc, RtcExt, Started, RtcInterrupt};
 
 
 #[app(device = nrf52832_pac)]
@@ -64,6 +67,7 @@ const APP: () = {
                           > = ();
     static mut DW_RST_PIN: DW_RST                   = ();
     static mut RANDOM:     Rng                      = ();
+    static mut RTC:        Rtc<RTC0_PERIPHERAL, Started>       = ();
 
     #[init]
     fn init() {
@@ -88,6 +92,11 @@ const APP: () = {
 
         let mut rst_pin = DW_RST::new(pins.p0_24.into_floating_input());
 
+        // Start the low freq clock
+        unsafe {
+            device.CLOCK.tasks_lfclkstart.write(|w| w.bits(1));
+        }
+
         let clocks = device.CLOCK.constrain().freeze();
 
         let mut delay = Delay::new(core.SYST, clocks);
@@ -96,6 +105,12 @@ const APP: () = {
 
         let dw1000 = dw1000.init().unwrap();
 
+        let mut rtc = RtcExt::constrain(device.RTC0);
+        rtc.set_prescaler(0xFFF).unwrap();
+        rtc.enable_interrupt(RtcInterrupt::Tick);
+        // rtc.enable_event(RtcInterrupt::Tick);
+
+        RTC = rtc.enable_counter();
         RANDOM = rng;
         DW_RST_PIN = rst_pin;
         DW1000 = dw1000;
@@ -104,12 +119,33 @@ const APP: () = {
         LED_RED_1 = pins.p0_14.degrade().into_push_pull_output(Level::High);
     }
 
-    #[idle(resources = [TIMER, LED_RED_1, LOGGER, RANDOM, DW1000])]
+    #[idle(resources = [TIMER, LOGGER, RANDOM, DW1000, RTC])]
     fn idle() -> ! {
+
         loop {
+            let mut out: String<U256> = String::new();
             delay(resources.TIMER, 1_000_000);
 
-            resources.LOGGER.log("Sent hello").expect("hello fail");
+            write!(
+                &mut out,
+                "RTC_CTR: 0x{:08X}\r\n",
+                resources.RTC.get_counter()
+            ).unwrap();
+            resources.LOGGER.log(&out).expect("hello fail");
+            rtfm::pend(Interrupt::RTC0);
         }
+    }
+
+    #[interrupt(resources = [LED_RED_1])]
+    fn RTC0() {
+        static mut TOGG: bool = false;
+
+        if *TOGG {
+            (*resources.LED_RED_1).set_low();
+        } else {
+            (*resources.LED_RED_1).set_high();
+        }
+
+        *TOGG = !*TOGG;
     }
 };

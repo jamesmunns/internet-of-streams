@@ -52,6 +52,9 @@ use uarte_logger::Logger;
 use utils::delay;
 
 mod rtc;
+mod clocks;
+
+use crate::clocks::{ClocksExt};
 use crate::rtc::{Rtc, RtcExt, Started, RtcInterrupt};
 
 
@@ -67,7 +70,7 @@ const APP: () = {
                           > = ();
     static mut DW_RST_PIN: DW_RST                   = ();
     static mut RANDOM:     Rng                      = ();
-    static mut RTC:        Rtc<RTC0_PERIPHERAL, Started>       = ();
+    static mut MY_RTC:        Rtc<RTC0_PERIPHERAL, Started>       = ();
 
     #[init]
     fn init() {
@@ -92,12 +95,8 @@ const APP: () = {
 
         let mut rst_pin = DW_RST::new(pins.p0_24.into_floating_input());
 
-        // Start the low freq clock
-        unsafe {
-            device.CLOCK.tasks_lfclkstart.write(|w| w.bits(1));
-        }
-
-        let clocks = device.CLOCK.constrain().freeze();
+        // Start the clocks
+        let clocks = device.CLOCK.constrain();
 
         let mut delay = Delay::new(core.SYST, clocks);
 
@@ -110,7 +109,7 @@ const APP: () = {
         rtc.enable_interrupt(RtcInterrupt::Tick);
         // rtc.enable_event(RtcInterrupt::Tick);
 
-        RTC = rtc.enable_counter();
+        MY_RTC = rtc.enable_counter();
         RANDOM = rng;
         DW_RST_PIN = rst_pin;
         DW1000 = dw1000;
@@ -119,26 +118,46 @@ const APP: () = {
         LED_RED_1 = pins.p0_14.degrade().into_push_pull_output(Level::High);
     }
 
-    #[idle(resources = [TIMER, LOGGER, RANDOM, DW1000, RTC])]
+    #[idle(resources = [TIMER, LOGGER, RANDOM, DW1000])]
     fn idle() -> ! {
 
         loop {
             let mut out: String<U256> = String::new();
             delay(resources.TIMER, 1_000_000);
 
-            write!(
-                &mut out,
-                "RTC_CTR: 0x{:08X}\r\n",
-                resources.RTC.get_counter()
-            ).unwrap();
-            resources.LOGGER.log(&out).expect("hello fail");
-            rtfm::pend(Interrupt::RTC0);
+            write!(&mut out, "HI").unwrap();
+            resources.LOGGER.log(&out).unwrap();
+
+            // write!(
+            //     &mut out,
+            //     "RTC_CTR: 0x{:08X}\r\n",
+            //     resources.RTC.get_counter()
+            // ).unwrap();
+            // resources.LOGGER.log(&out).expect("hello fail");
+            // rtfm::pend(Interrupt::RTC0);
         }
     }
 
-    #[interrupt(resources = [LED_RED_1])]
+    #[interrupt(resources = [MY_RTC, LED_RED_1])]
     fn RTC0() {
         static mut TOGG: bool = false;
+        static mut STEP: u8 = 0;
+
+        (*resources.MY_RTC).get_event_triggered(RtcInterrupt::Tick, true);
+
+        // unsafe {
+        //     (*RTC0_PERIPHERAL::ptr()).events_tick.modify(|_r, w| {
+        //         w.bits(1)
+        //     })
+        // };
+
+        *STEP += 1;
+
+        if *STEP < 8 {
+            return;
+        } else {
+            *STEP = 0;
+        }
 
         if *TOGG {
             (*resources.LED_RED_1).set_low();

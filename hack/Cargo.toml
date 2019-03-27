@@ -12,14 +12,20 @@ nrf52832-pac    = "0.6.0"
 dw1000          = "0.1.0"
 embedded-hal    = "0.2.2"
 heapless        = "0.4.2"
+cortex-m = "*"
 
 [dependencies.ssmarshal]
 version       = "=1.0.0"
 default-features = false
 
 [dependencies.dwm1001]
-version = "0.1.0"
+version = "0.1.1"
 features = [ "dev", "rt" ]
+
+[dependencies.cast]
+version = "0.2"
+default-features = false
+
 
 # Local workspace deps
 

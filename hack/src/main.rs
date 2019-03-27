@@ -11,7 +11,7 @@ use dw1000::{DW1000 as DW};
 use dwm1001::{
     self,
     nrf52832_hal::{
-        delay::Delay,
+        // delay::Delay,
         prelude::*,
         timer::Timer,
         gpio::{Pin, Output, PushPull, Level, p0::P0_17},
@@ -53,9 +53,11 @@ use utils::delay;
 
 mod rtc;
 mod clocks;
+mod delay;
 
-use crate::clocks::{ClocksExt};
+use crate::clocks::{ClocksExt, LfOscConfiguration};
 use crate::rtc::{Rtc, RtcExt, Started, RtcInterrupt};
+use crate::delay::Delay;
 
 
 #[app(device = nrf52832_pac)]
@@ -70,7 +72,7 @@ const APP: () = {
                           > = ();
     static mut DW_RST_PIN: DW_RST                   = ();
     static mut RANDOM:     Rng                      = ();
-    static mut MY_RTC:        Rtc<RTC0_PERIPHERAL, Started>       = ();
+    static mut RTCT:        Rtc<RTC0_PERIPHERAL, Started>       = ();
 
     #[init]
     fn init() {
@@ -96,9 +98,17 @@ const APP: () = {
         let mut rst_pin = DW_RST::new(pins.p0_24.into_floating_input());
 
         // Start the clocks
-        let clocks = device.CLOCK.constrain();
+        let _clocks = device
+            .CLOCK
+            .constrain()
+            .enable_ext_hfosc()
+            // .set_lfclk_src_synth()
+            .set_lfclk_src_external(LfOscConfiguration::NoExternalNoBypass)
+            // .set_lfclk_src_rc()
+            .start_lfclk();
 
-        let mut delay = Delay::new(core.SYST, clocks);
+
+        let mut delay = Delay::new(core.SYST);
 
         rst_pin.reset_dw1000(&mut delay);
 
@@ -107,9 +117,8 @@ const APP: () = {
         let mut rtc = RtcExt::constrain(device.RTC0);
         rtc.set_prescaler(0xFFF).unwrap();
         rtc.enable_interrupt(RtcInterrupt::Tick);
-        // rtc.enable_event(RtcInterrupt::Tick);
 
-        MY_RTC = rtc.enable_counter();
+        RTCT = rtc.enable_counter();
         RANDOM = rng;
         DW_RST_PIN = rst_pin;
         DW1000 = dw1000;
@@ -118,15 +127,15 @@ const APP: () = {
         LED_RED_1 = pins.p0_14.degrade().into_push_pull_output(Level::High);
     }
 
-    #[idle(resources = [TIMER, LOGGER, RANDOM, DW1000])]
+    #[idle(resources = [TIMER, RANDOM, DW1000])]
     fn idle() -> ! {
 
         loop {
             let mut out: String<U256> = String::new();
             delay(resources.TIMER, 1_000_000);
 
-            write!(&mut out, "HI").unwrap();
-            resources.LOGGER.log(&out).unwrap();
+            // write!(&mut out, "HI").unwrap();
+            // (*resources.LOGGER).log(&out).unwrap();
 
             // write!(
             //     &mut out,
@@ -138,22 +147,16 @@ const APP: () = {
         }
     }
 
-    #[interrupt(resources = [MY_RTC, LED_RED_1])]
+    #[interrupt(resources = [RTCT, LED_RED_1, LOGGER])]
     fn RTC0() {
         static mut TOGG: bool = false;
-        static mut STEP: u8 = 0;
+        static mut STEP: u32 = 0;
 
-        (*resources.MY_RTC).get_event_triggered(RtcInterrupt::Tick, true);
-
-        // unsafe {
-        //     (*RTC0_PERIPHERAL::ptr()).events_tick.modify(|_r, w| {
-        //         w.bits(1)
-        //     })
-        // };
+        (*resources.RTCT).get_event_triggered(RtcInterrupt::Tick, true);
 
         *STEP += 1;
 
-        if *STEP < 8 {
+        if *STEP < 80  {
             return;
         } else {
             *STEP = 0;
@@ -164,6 +167,10 @@ const APP: () = {
         } else {
             (*resources.LED_RED_1).set_high();
         }
+
+        let mut out: String<U256> = String::new();
+        write!(&mut out, "TICK {}", (*resources.RTCT).get_counter()).unwrap();
+        (*resources.LOGGER).log(&out).unwrap();
 
         *TOGG = !*TOGG;
     }

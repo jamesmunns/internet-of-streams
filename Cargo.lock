@@ -134,6 +134,8 @@ dependencies = [
 name = "hack"
 version = "0.1.0"
 dependencies = [
+ "cast 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cortex-m 0.5.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "cortex-m-rtfm 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "dw1000 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "dwm1001 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",

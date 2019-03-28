@@ -105,7 +105,8 @@ const APP: () = {
             // .set_lfclk_src_synth()
             .set_lfclk_src_external(LfOscConfiguration::NoExternalNoBypass)
             // .set_lfclk_src_rc()
-            .start_lfclk();
+            .start_lfclk()
+            .disable_ext_hfosc();
 
 
         let mut delay = Delay::new(core.SYST);

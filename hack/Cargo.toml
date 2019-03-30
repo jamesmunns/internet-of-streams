@@ -37,3 +37,6 @@ path = "../utils"
 
 [dependencies.protocol]
 path = "../protocol"
+
+[dependencies.nrf52-hal-backports]
+path = "../nrf52-hal-backports"

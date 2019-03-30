@@ -1,0 +1,14 @@
+[package]
+name = "nrf52-hal-backports"
+version = "0.1.0"
+authors = ["James Munns <james.munns@ferrous-systems.com>"]
+edition = "2018"
+
+[dependencies]
+nrf52832-pac    = "0.6.0"
+cortex-m = "*"
+embedded-hal    = "0.2.2"
+
+[dependencies.cast]
+version = "0.2"
+default-features = false

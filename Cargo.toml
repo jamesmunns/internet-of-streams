@@ -7,5 +7,6 @@ members = [
 
     "utils",
     "protocol",
+    "nrf52-hal-backports",
 ]
 

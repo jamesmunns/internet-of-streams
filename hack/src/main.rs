@@ -1,8 +1,6 @@
 #![no_main]
 #![no_std]
 
-#![allow(unused_imports)]
-
 // Built in dependencies
 use core::fmt::Write;
 
@@ -21,11 +19,7 @@ use dwm1001::{
             TIMER0,
             SPIM2,
             RTC0 as RTC0_PERIPHERAL,
-            Interrupt,
         },
-    },
-    dw1000::{
-        mac::Address,
     },
     new_dw1000,
     new_usb_uarte,
@@ -33,12 +27,7 @@ use dwm1001::{
     DW_RST,
 };
 use heapless::{String, consts::*};
-use nb::{
-    block,
-    Error as NbError,
-};
 use rtfm::app;
-use ssmarshal::{serialize, deserialize};
 
 // NOTE: Panic Provider
 use panic_ramdump as _;
@@ -47,17 +36,21 @@ use panic_ramdump as _;
 use nrf52832_pac;
 
 // Workspace dependencies
-use protocol::DemoMessage;
 use uarte_logger::Logger;
-use utils::delay;
 
-mod rtc;
-mod clocks;
-mod delay;
-
-use crate::clocks::{ClocksExt, LfOscConfiguration};
-use crate::rtc::{Rtc, RtcExt, Started, RtcInterrupt};
-use crate::delay::Delay;
+use nrf52_hal_backports::{
+    clocks::{
+        ClocksExt,
+        LfOscConfiguration
+    },
+    rtc::{
+        Rtc,
+        RtcExt,
+        Started,
+        RtcInterrupt
+    },
+    delay::Delay,
+};
 
 
 #[app(device = nrf52832_pac)]
@@ -129,19 +122,7 @@ const APP: () = {
     fn idle() -> ! {
 
         loop {
-            let mut out: String<U256> = String::new();
-            delay(resources.TIMER, 1_000_000);
-
-            // write!(&mut out, "HI").unwrap();
-            // (*resources.LOGGER).log(&out).unwrap();
-
-            // write!(
-            //     &mut out,
-            //     "RTC_CTR: 0x{:08X}\r\n",
-            //     resources.RTC.get_counter()
-            // ).unwrap();
-            // resources.LOGGER.log(&out).expect("hello fail");
-            // rtfm::pend(Interrupt::RTC0);
+            cortex_m::asm::wfi();
         }
     }
 

@@ -1,5 +1,5 @@
 [package]
-name = "hack"
+name = "rtc-poc"
 version = "0.1.0"
 authors = ["James Munns <james.munns@ferrous-systems.com>"]
 edition = "2018"
@@ -30,13 +30,13 @@ default-features = false
 # Local workspace deps
 
 [dependencies.uarte-logger]
-path = "../uarte-logger"
+path = "../../uarte-logger"
 
 [dependencies.utils]
-path = "../utils"
+path = "../../utils"
 
 [dependencies.protocol]
-path = "../protocol"
+path = "../../protocol"
 
 [dependencies.nrf52-hal-backports]
-path = "../nrf52-hal-backports"
+path = "../../nrf52-hal-backports"

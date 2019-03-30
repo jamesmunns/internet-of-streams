@@ -3,7 +3,9 @@
 members = [
     "sensor-node",
     "uarte-logger",
-    "hack",
+
+    # Proof of Concepts
+    "pocs/rtc-poc",
 
     "utils",
     "protocol",

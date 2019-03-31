@@ -10,6 +10,7 @@ use heapless::binary_heap::{BinaryHeap, Min};
 use crate::uhr::Uhr;
 
 bitflags! {
+    /// A bit packed structure representing days of the week
     pub struct DayFlags: u8 {
         const MONDAY    = 0b0000_0001;
         const TUESDAY   = 0b0000_0010;
@@ -71,6 +72,7 @@ impl DayFlags {
     }
 }
 
+/// An opaque structure representing an alarm that may or may not repeat periodically
 #[derive(Debug, Eq, PartialEq)]
 pub struct Alarm {
     next_time: Uhr,
@@ -95,7 +97,7 @@ pub enum Error {
     AlarmNotOnRepeat,
 
     /// No space remains to push alarm
-    AlarmFull
+    AlarmFull,
 }
 
 /// A structure for storing a wall clock with associated alarms. Alarms
@@ -143,10 +145,12 @@ where
             }
         }
 
-        self.alarms.push(Alarm {
-            next_time: first_time,
-            repeat
-        }).map_err(|_| Error::AlarmFull)
+        self.alarms
+            .push(Alarm {
+                next_time: first_time,
+                repeat,
+            })
+            .map_err(|_| Error::AlarmFull)
     }
 
     /// Process all pending alarms, including rescheduling. If
@@ -173,9 +177,9 @@ where
             }
 
             // How many days until the next alarm instance?
-            let days_til = alarm.repeat.days_after(
-                self.time.into_local_date_time().day_of_the_week(),
-            );
+            let days_til = alarm
+                .repeat
+                .days_after(self.time.into_local_date_time().day_of_the_week());
 
             // Increment the alarm to the next period
             alarm.next_time.increment(&(days_til * ONE_DAY));

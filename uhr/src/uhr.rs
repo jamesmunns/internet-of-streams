@@ -85,10 +85,7 @@ impl Uhr {
 
     /// Convert the current wall clock into a local `DateTime` object
     pub fn into_local_date_time(&self) -> DateTime<FixedOffsetFromUtc> {
-        DateTime::from_timestamp(
-            self.seconds,
-            self.tz_offset
-        )
+        DateTime::from_timestamp(self.seconds, self.tz_offset)
     }
 
     /// Change the local timezone of the clock

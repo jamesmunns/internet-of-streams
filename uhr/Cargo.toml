@@ -2,7 +2,11 @@
 name = "uhr"
 version = "0.1.0"
 authors = ["James Munns <james.munns@ferrous-systems.com>"]
+license = "MIT OR Apache-2.0"
 edition = "2018"
+repository = "https://github.com/ferrous-systems/internet-of-streams"
+documentation = "https://docs.rs/uhr"
+description = "A no_std friendly wall clock and alarm clock library"
 
 [dependencies]
 heapless = "0.4.2"

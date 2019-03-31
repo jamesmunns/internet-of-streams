@@ -57,6 +57,7 @@ use uhr::{
     Wecker,
     FixedOffsetFromUtc,
     UnixTimestamp,
+    DayFlags,
 };
 
 use core::time::Duration;
@@ -119,14 +120,20 @@ const APP: () = {
         rtc.set_prescaler(0xFFF).unwrap();
         rtc.enable_interrupt(RtcInterrupt::Tick);
 
-        let mut alarm = Wecker::new(UnixTimestamp(1553997094));
+        let mut alarm = Wecker::new(UnixTimestamp(1554041486));
 
+        // CEST
         alarm.time.set_local_time_zone(FixedOffsetFromUtc::from_hours_and_minutes(2, 0));
 
-        alarm.alarms.push(Uhr::from(UnixTimestamp(1553997094 + 10))).unwrap();
-        alarm.alarms.push(Uhr::from(UnixTimestamp(1553997094 + 10))).unwrap();
-        alarm.alarms.push(Uhr::from(UnixTimestamp(1553997094 + 20))).unwrap();
-        alarm.alarms.push(Uhr::from(UnixTimestamp(1553997094 + 25))).unwrap();
+        // alarm.alarms.push(Uhr::from(UnixTimestamp(1554041486 + 10))).unwrap();
+
+        let mut next_alarm = Uhr::from(UnixTimestamp(1554041486 + 10));
+        next_alarm.set_local_time_zone(FixedOffsetFromUtc::from_hours_and_minutes(2, 0));
+
+        alarm.insert_alarm(next_alarm, DayFlags::SUNDAY).unwrap();
+        // alarm.alarms.push(Uhr::from(UnixTimestamp(1554041486 + 25))).unwrap();
+        // alarm.alarms.push(Uhr::from(UnixTimestamp(1554041486 + 20))).unwrap();
+        // alarm.alarms.push(Uhr::from(UnixTimestamp(1554041486 + 10))).unwrap();
 
         RTCT = rtc.enable_counter();
         RANDOM = rng;
@@ -140,7 +147,6 @@ const APP: () = {
 
     #[idle(resources = [TIMER, RANDOM, DW1000])]
     fn idle() -> ! {
-
         loop {
             cortex_m::asm::wfi();
         }
@@ -165,8 +171,12 @@ const APP: () = {
 
         resources.ALARM_CLOCK.time.increment(TICK_TIME);
         if resources.ALARM_CLOCK.alarm_ready() {
+            out.clear();
             write!(&mut out, "!!! ALARM !!!").unwrap();
             (*resources.LOGGER).error(&out).unwrap();
+            out.clear();
+            write!(&mut out, "{:?}", resources.ALARM_CLOCK).unwrap();
+            (*resources.LOGGER).log(&out).unwrap();
         }
 
         if (*STEP & 0x7) == 0 {

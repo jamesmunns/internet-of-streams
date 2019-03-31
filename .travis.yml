@@ -10,3 +10,4 @@ install:
 
 script:
 - cargo build --all
+- cargo test --manifest-path=./uhr/Cargo.toml --target x86_64-unknown-linux-gnu

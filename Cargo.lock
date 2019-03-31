@@ -131,6 +131,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "gregor"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "hash32"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -326,6 +331,8 @@ dependencies = [
  "dw1000 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "dwm1001 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "generic-array 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gregor 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nb 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "nrf52-hal-backports 0.1.0",
@@ -334,6 +341,7 @@ dependencies = [
  "protocol 0.1.0",
  "ssmarshal 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "uarte-logger 0.1.0",
+ "uhr 0.1.0",
  "utils 0.1.0",
 ]
 
@@ -438,6 +446,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "uhr"
+version = "0.1.0"
+dependencies = [
+ "generic-array 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gregor 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "unicode-xid"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -484,6 +501,7 @@ dependencies = [
 "checksum embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "9880e55238830314d41d88f1ac7a819d495799c3cc3bc392cc172bab26428c33"
 "checksum encode_unicode 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)" = "90b2c9496c001e8cb61827acdefad780795c42264c137744cae6f7d9e3450abd"
 "checksum generic-array 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)" = "8107dafa78c80c848b71b60133954b4a58609a3a1a5f9af037ecc7f67280f369"
+"checksum gregor 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "de4ee4a087922af7d55ecbcd41a95cc79b40844924bec1af547b75773d22397a"
 "checksum hash32 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "12d790435639c06a7b798af9e1e331ae245b7ef915b92f70a39b4cf8c00686af"
 "checksum hash32-derive 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ebc0efbd154a17cddc3616d83faef479c0076d871a2143c157b310cc7ca799a2"
 "checksum heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)" = "56b960caff1a46f1fb3c1eb05f0575ac21c6248364ebebde11b11116e099881c"

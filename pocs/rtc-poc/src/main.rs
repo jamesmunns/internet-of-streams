@@ -52,6 +52,14 @@ use nrf52_hal_backports::{
     delay::Delay,
 };
 
+use uhr::{
+    Uhr,
+    Winkel,
+};
+
+use core::time::Duration;
+use gregor::FixedOffsetFromUtc;
+
 
 #[app(device = nrf52832_pac)]
 const APP: () = {
@@ -66,6 +74,7 @@ const APP: () = {
     static mut DW_RST_PIN: DW_RST                   = ();
     static mut RANDOM:     Rng                      = ();
     static mut RTCT:        Rtc<RTC0_PERIPHERAL, Started>       = ();
+    static mut ALARM_CLOCK: Winkel<U8> = ();
 
     #[init]
     fn init() {
@@ -109,6 +118,15 @@ const APP: () = {
         rtc.set_prescaler(0xFFF).unwrap();
         rtc.enable_interrupt(RtcInterrupt::Tick);
 
+        let mut alarm = Winkel::new(gregor::UnixTimestamp(1553997094));
+
+        alarm.time.set_local_time_zone(FixedOffsetFromUtc::from_hours_and_minutes(2, 0));
+
+        alarm.alarms.push(Uhr::from(gregor::UnixTimestamp(10))).unwrap();
+        alarm.alarms.push(Uhr::from(gregor::UnixTimestamp(10))).unwrap();
+        alarm.alarms.push(Uhr::from(gregor::UnixTimestamp(20))).unwrap();
+        alarm.alarms.push(Uhr::from(gregor::UnixTimestamp(25))).unwrap();
+
         RTCT = rtc.enable_counter();
         RANDOM = rng;
         DW_RST_PIN = rst_pin;
@@ -116,6 +134,7 @@ const APP: () = {
         LOGGER = Logger::new(uarte0);
         TIMER = timer;
         LED_RED_1 = pins.p0_14.degrade().into_push_pull_output(Level::High);
+        ALARM_CLOCK = alarm;
     }
 
     #[idle(resources = [TIMER, RANDOM, DW1000])]
@@ -126,20 +145,13 @@ const APP: () = {
         }
     }
 
-    #[interrupt(resources = [RTCT, LED_RED_1, LOGGER])]
+    #[interrupt(resources = [ALARM_CLOCK, RTCT, LED_RED_1, LOGGER])]
     fn RTC0() {
         static mut TOGG: bool = false;
         static mut STEP: u32 = 0;
+        const TICK_TIME: Duration = Duration::from_millis(125);
 
         (*resources.RTCT).get_event_triggered(RtcInterrupt::Tick, true);
-
-        *STEP += 1;
-
-        if *STEP < 80  {
-            return;
-        } else {
-            *STEP = 0;
-        }
 
         if *TOGG {
             (*resources.LED_RED_1).set_low();
@@ -147,10 +159,29 @@ const APP: () = {
             (*resources.LED_RED_1).set_high();
         }
 
-        let mut out: String<U256> = String::new();
-        write!(&mut out, "TICK {}", (*resources.RTCT).get_counter()).unwrap();
-        (*resources.LOGGER).log(&out).unwrap();
+        let mut out: String<U1024> = String::new();
 
+
+        resources.ALARM_CLOCK.time.increment(TICK_TIME);
+        if resources.ALARM_CLOCK.alarm_ready() {
+            write!(&mut out, "!!! ALARM !!!").unwrap();
+            (*resources.LOGGER).error(&out).unwrap();
+        }
+
+        if (*STEP & 0x7) == 0 {
+            let time = resources.ALARM_CLOCK.time.into_local_date_time();
+            out.clear();
+            write!(
+                &mut out,
+                "TIME {:02}:{:02}:{:02}",
+                time.hour(),
+                time.minute(),
+                time.second(),
+            ).unwrap();
+            (*resources.LOGGER).log(&out).unwrap();
+        }
+
+        *STEP += 1;
         *TOGG = !*TOGG;
     }
 };

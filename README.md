@@ -35,12 +35,28 @@ You can find a [playlist of all videos here](https://www.youtube.com/playlist?li
     * Receive incoming messages
     * Use the hardware random number generator
     * Serialize/Deserialize messages with `ssmarshal` and `serde`
+* [2019-03-17] - **Workspace Cleanup and Alarm Clock Planning**
+    * Discuss making an alarm clock as a first device
+    * Discuss RTCs and how they work
+    * Refactor the repo into a workspace
+* [2019-03-20] - **Real Time Clock - Part 1**
+    * Start implementing the nRF52 RTC peripheral
+    * Write a low level peripheral driver
+    * Add an interrupt handler to RTFM
+    * Got stuck due to some code problems
+* [2019-03-28] - **Real Time Clock - Part 2**
+    * Debugging a low level peripheral driver
+    * Investigating what went wrong
+    * Got the RTC interrupt working properly!
 
 [2019-02-23]: https://youtu.be/S0VI70nY6Vo
 [2019-02-28]: https://youtu.be/mnPbmPqKf1s
 [2019-03-02]: https://youtu.be/O6KeMpnLRkI
 [2019-03-07]: https://youtu.be/WYIei1MpVe4
 [2019-03-10]: https://youtu.be/U2rC24XGtTk
+[2019-03-17]: https://youtu.be/Qaa_p0K_B84
+[2019-03-20]: https://youtu.be/_M0AYdWKnzw
+[2019-03-28]: https://youtu.be/UB8OiEFdYgQ
 
 ## Future Topics
 

@@ -7,6 +7,7 @@ edition = "2018"
 repository = "https://github.com/ferrous-systems/internet-of-streams"
 documentation = "https://docs.rs/uhr"
 description = "A no_std friendly wall clock and alarm clock library"
+readme = "README.md"
 
 [dependencies]
 heapless = "0.4.2"

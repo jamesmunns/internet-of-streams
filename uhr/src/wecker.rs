@@ -10,7 +10,7 @@ use crate::uhr::Uhr;
 /// A structure for storing a wall clock with associated alarms. Alarms
 /// are stored in a binary heap, in a "soonest first" order.
 #[derive(Debug)]
-pub struct Winkel<ALARMS>
+pub struct Wecker<ALARMS>
 where
     ALARMS: ArrayLength<Uhr>,
 {
@@ -18,25 +18,25 @@ where
     pub alarms: BinaryHeap<Uhr, ALARMS, Min>,
 }
 
-impl<ALARMS> From<Uhr> for Winkel<ALARMS>
+impl<ALARMS> From<Uhr> for Wecker<ALARMS>
 where
     ALARMS: ArrayLength<Uhr>,
 {
     fn from(clock: Uhr) -> Self {
-        Winkel {
+        Wecker {
             time: clock,
             alarms: BinaryHeap::new(),
         }
     }
 }
 
-impl<ALARMS> Winkel<ALARMS>
+impl<ALARMS> Wecker<ALARMS>
 where
     ALARMS: ArrayLength<Uhr>,
 {
     /// Create a new wall clock in UTC time, with no alarms
     pub fn new(time: UnixTimestamp) -> Self {
-        Winkel {
+        Wecker {
             time: Uhr::from(time),
             alarms: BinaryHeap::new(),
         }

@@ -1,10 +1,10 @@
 #![no_std]
 
 pub mod uhr;
-pub mod winkel;
+pub mod wecker;
 
 pub use crate::uhr::Uhr;
-pub use crate::winkel::Winkel;
+pub use crate::wecker::Wecker;
 pub use gregor::{
     DateTime,
     FixedOffsetFromUtc,

@@ -54,7 +54,7 @@ use nrf52_hal_backports::{
 
 use uhr::{
     Uhr,
-    Winkel,
+    Wecker,
     FixedOffsetFromUtc,
     UnixTimestamp,
 };
@@ -75,7 +75,7 @@ const APP: () = {
     static mut DW_RST_PIN: DW_RST                   = ();
     static mut RANDOM:     Rng                      = ();
     static mut RTCT:        Rtc<RTC0_PERIPHERAL, Started>       = ();
-    static mut ALARM_CLOCK: Winkel<U8> = ();
+    static mut ALARM_CLOCK: Wecker<U8> = ();
 
     #[init]
     fn init() {
@@ -119,7 +119,7 @@ const APP: () = {
         rtc.set_prescaler(0xFFF).unwrap();
         rtc.enable_interrupt(RtcInterrupt::Tick);
 
-        let mut alarm = Winkel::new(UnixTimestamp(1553997094));
+        let mut alarm = Wecker::new(UnixTimestamp(1553997094));
 
         alarm.time.set_local_time_zone(FixedOffsetFromUtc::from_hours_and_minutes(2, 0));
 

@@ -42,6 +42,35 @@ impl From<DayOfTheWeek> for DayFlags {
     }
 }
 
+impl DayFlags {
+    fn days_after(&self, today: DayOfTheWeek) -> u32 {
+        // We must have some recurring item to reschedule
+        debug_assert!(!self.is_empty());
+
+        // Render the current day of the week as a bit flag
+        let cur = DayFlags::from(today);
+
+        // Obtain (u8) versions of our flag structure
+        let curb = cur.bits();
+        let repb = self.bits();
+
+        // Overlay next week with this week
+        let cur2: u32 = u32::from(curb | repb) | (u32::from(repb) << 7);
+
+        // Get rid of days this week that have already passed
+        let cur3 = cur2 >> curb.trailing_zeros() + 1;
+
+        // How many blank days until the next repeat?
+        let cur4 = cur3.trailing_zeros() + 1;
+
+        // Our alarm does not support intervals greater than a week
+        debug_assert!(cur4 <= 7);
+        debug_assert!(cur4 > 0);
+
+        cur4
+    }
+}
+
 #[derive(Debug, Eq, PartialEq)]
 pub struct Alarm {
     next_time: Uhr,
@@ -144,9 +173,8 @@ where
             }
 
             // How many days until the next alarm instance?
-            let days_til = days_until_next(
+            let days_til = alarm.repeat.days_after(
                 self.time.into_local_date_time().day_of_the_week(),
-                alarm.repeat,
             );
 
             // Increment the alarm to the next period
@@ -166,57 +194,33 @@ where
     }
 }
 
-fn days_until_next(curr: DayOfTheWeek, repeat: DayFlags) -> u32 {
-    // Render the current day of the week as a bit flag
-    let cur = DayFlags::from(curr);
-
-    // Obtain (u8) versions of our flag structure
-    let curb = cur.bits();
-    let repb = repeat.bits();
-
-    // Overlay next week with this week
-    let cur2: u32 = u32::from(curb | repb) | (u32::from(repb) << 7);
-
-    // Get rid of days this week that have already passed
-    let cur3 = cur2 >> curb.trailing_zeros() + 1;
-
-    // How many blank days until the next repeat?
-    let cur4 = cur3.trailing_zeros() + 1;
-
-    // Our alarm does not support intervals greater than a week
-    debug_assert!(cur4 <= 7);
-    debug_assert!(cur4 > 0);
-
-    cur4
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     #[test]
     fn days_until_test() {
         assert_eq!(
-            days_until_next(DayOfTheWeek::Thursday, DayFlags::FRIDAY,),
+            DayFlags::days_after(&DayFlags::FRIDAY, DayOfTheWeek::Thursday),
             1
         );
 
         assert_eq!(
-            days_until_next(DayOfTheWeek::Friday, DayFlags::THURSDAY,),
+            DayFlags::days_after(&DayFlags::THURSDAY, DayOfTheWeek::Friday),
             6
         );
 
         assert_eq!(
-            days_until_next(DayOfTheWeek::Friday, DayFlags::WEEKDAYS,),
+            DayFlags::days_after(&DayFlags::WEEKDAYS, DayOfTheWeek::Friday),
             3
         );
 
         assert_eq!(
-            days_until_next(DayOfTheWeek::Sunday, DayFlags::WEEKENDS,),
+            DayFlags::days_after(&DayFlags::WEEKENDS, DayOfTheWeek::Sunday),
             6
         );
 
         assert_eq!(
-            days_until_next(DayOfTheWeek::Thursday, DayFlags::THURSDAY,),
+            DayFlags::days_after(&DayFlags::THURSDAY, DayOfTheWeek::Thursday),
             7
         );
     }

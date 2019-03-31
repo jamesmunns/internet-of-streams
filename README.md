@@ -48,6 +48,9 @@ You can find a [playlist of all videos here](https://www.youtube.com/playlist?li
     * Debugging a low level peripheral driver
     * Investigating what went wrong
     * Got the RTC interrupt working properly!
+* [2019-03-31] - **Making an Alarm Clock - Part 1**
+    * Reviewed the [`uhr` crate] for tracking wall time and alarms
+    * Implemented a (re-)scheduler to allow alarms to repeat on a fixed weekly schedule
 
 [2019-02-23]: https://youtu.be/S0VI70nY6Vo
 [2019-02-28]: https://youtu.be/mnPbmPqKf1s
@@ -57,6 +60,9 @@ You can find a [playlist of all videos here](https://www.youtube.com/playlist?li
 [2019-03-17]: https://youtu.be/Qaa_p0K_B84
 [2019-03-20]: https://youtu.be/_M0AYdWKnzw
 [2019-03-28]: https://youtu.be/UB8OiEFdYgQ
+[2019-03-31]: https://youtu.be/CGJNQR1rj9Q
+
+[`uhr` crate]: https://crates.io/crates/uhr
 
 ## Future Topics
 

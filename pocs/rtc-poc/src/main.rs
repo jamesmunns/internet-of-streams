@@ -55,10 +55,11 @@ use nrf52_hal_backports::{
 use uhr::{
     Uhr,
     Winkel,
+    FixedOffsetFromUtc,
+    UnixTimestamp,
 };
 
 use core::time::Duration;
-use gregor::FixedOffsetFromUtc;
 
 
 #[app(device = nrf52832_pac)]
@@ -118,14 +119,14 @@ const APP: () = {
         rtc.set_prescaler(0xFFF).unwrap();
         rtc.enable_interrupt(RtcInterrupt::Tick);
 
-        let mut alarm = Winkel::new(gregor::UnixTimestamp(1553997094));
+        let mut alarm = Winkel::new(UnixTimestamp(1553997094));
 
         alarm.time.set_local_time_zone(FixedOffsetFromUtc::from_hours_and_minutes(2, 0));
 
-        alarm.alarms.push(Uhr::from(gregor::UnixTimestamp(10))).unwrap();
-        alarm.alarms.push(Uhr::from(gregor::UnixTimestamp(10))).unwrap();
-        alarm.alarms.push(Uhr::from(gregor::UnixTimestamp(20))).unwrap();
-        alarm.alarms.push(Uhr::from(gregor::UnixTimestamp(25))).unwrap();
+        alarm.alarms.push(Uhr::from(UnixTimestamp(1553997094 + 10))).unwrap();
+        alarm.alarms.push(Uhr::from(UnixTimestamp(1553997094 + 10))).unwrap();
+        alarm.alarms.push(Uhr::from(UnixTimestamp(1553997094 + 20))).unwrap();
+        alarm.alarms.push(Uhr::from(UnixTimestamp(1553997094 + 25))).unwrap();
 
         RTCT = rtc.enable_counter();
         RANDOM = rng;
@@ -149,7 +150,7 @@ const APP: () = {
     fn RTC0() {
         static mut TOGG: bool = false;
         static mut STEP: u32 = 0;
-        const TICK_TIME: Duration = Duration::from_millis(125);
+        const TICK_TIME: &Duration = &Duration::from_millis(125);
 
         (*resources.RTCT).get_event_triggered(RtcInterrupt::Tick, true);
 

@@ -331,8 +331,6 @@ dependencies = [
  "dw1000 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "dwm1001 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "generic-array 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "gregor 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nb 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "nrf52-hal-backports 0.1.0",

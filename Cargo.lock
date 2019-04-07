@@ -12,6 +12,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "better-logging"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rtfm 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "dw1000 0.1.0",
+ "dwm1001 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nb 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nrf52832-pac 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "panic-ramdump 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "postcard 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "protocol 0.1.0",
+ "ssmarshal 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "uarte-logger 0.1.0",
+ "utils 0.1.0",
+]
+
+[[package]]
 name = "bitflags"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -90,13 +109,11 @@ dependencies = [
 [[package]]
 name = "dw1000"
 version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "ieee802154 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "nb 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.85 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_derive 1.0.85 (registry+https://github.com/rust-lang/crates.io-index)",
  "ssmarshal 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -108,7 +125,7 @@ dependencies = [
  "cortex-m 0.5.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "cortex-m-rt 0.6.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "cortex-m-semihosting 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "dw1000 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "dw1000 0.1.0",
  "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nrf52832-hal 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -165,6 +182,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "generic-array 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "hash32 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 1.0.85 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -259,6 +277,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "postcard"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "byteorder 1.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 1.0.85 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "proc-macro2"
 version = "0.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -333,7 +361,7 @@ dependencies = [
  "cast 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "cortex-m 0.5.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "cortex-m-rtfm 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "dw1000 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "dw1000 0.1.0",
  "dwm1001 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -374,7 +402,7 @@ name = "sensor-node"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rtfm 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "dw1000 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "dw1000 0.1.0",
  "dwm1001 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -391,6 +419,9 @@ dependencies = [
 name = "serde"
 version = "1.0.85"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "serde_derive 1.0.85 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "serde_derive"
@@ -445,7 +476,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "uarte-logger"
 version = "0.1.0"
 dependencies = [
+ "heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nrf52832-hal 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "postcard 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "protocol 0.1.0",
+ "serde 1.0.85 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -501,7 +536,6 @@ dependencies = [
 "checksum cortex-m-rtfm 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)" = "12b165b9c6ab11aebd304fac4dd6ef10f69dbac2e9f6858e4c98da3588e70412"
 "checksum cortex-m-rtfm-macros 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)" = "a25f736f4c63385e923036a9708a8447b21a7a46299bdd3678f81d1f36d7c990"
 "checksum cortex-m-semihosting 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "d1dc2abec1a772e8bb697cad17d5710f180043caf8939820f0f6ba4b7ae2a4b5"
-"checksum dw1000 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8f77c3702f744259a3546f52a93b0818cb8ef35e8f2d5ae2fbc26ebdfcb79f31"
 "checksum dwm1001 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "5b9b30a132752b1550fd88f09001d86a9fadf1d20cd248b6e1350feb970715d5"
 "checksum embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "9880e55238830314d41d88f1ac7a819d495799c3cc3bc392cc172bab26428c33"
 "checksum encode_unicode 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)" = "90b2c9496c001e8cb61827acdefad780795c42264c137744cae6f7d9e3450abd"
@@ -518,6 +552,7 @@ dependencies = [
 "checksum owned-singleton 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "21aa378869c97c7db706a4c576cf0ce8258dc7e0e1ad25a97ee5aba1fd4eed83"
 "checksum owned-singleton-macros 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8d5c2ac071b95017bf70a5b607037fb0ef4abfa663fdf6cac8fbf36af9756ee3"
 "checksum panic-ramdump 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "699e5f8c3ae987deb02e8fea0099145f944b0d94b19efaa72d2d81484c908e4e"
+"checksum postcard 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ec3d3cdc2e02ecd4058f99527dd00ea41ec717be7122acb135a19a12bee11693"
 "checksum proc-macro2 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)" = "1b06e2f335f48d24442b35a19df506a835fb3547bc3c06ef27340da9acf5cae7"
 "checksum proc-macro2 0.4.27 (registry+https://github.com/rust-lang/crates.io-index)" = "4d317f9caece796be1980837fd5cb3dfec5613ebdb04ad0956deea83ce168915"
 "checksum quote 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)" = "9949cfe66888ffe1d53e6ec9d9f3b70714083854be20fd5e271b232a017401e8"

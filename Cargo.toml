@@ -6,6 +6,7 @@ members = [
 
     # Proof of Concepts
     "pocs/rtc-poc",
+    "pocs/better-logging",
 
     "uhr",
     "utils",
@@ -19,3 +20,6 @@ debug = true
 lto = true
 incremental = false
 codegen-units = 1
+
+[patch.crates-io]
+dw1000 = { path = './vendor/rust-dw1000' }

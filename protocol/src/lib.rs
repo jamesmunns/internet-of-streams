@@ -6,6 +6,10 @@ use serde;
 use serde_derive::{Deserialize, Serialize};
 use nrf52832_hal::rng::Rng;
 
+#[derive(Serialize, Deserialize, Debug)]
+pub enum AllMessages {
+
+}
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct DemoMessage {

@@ -1,0 +1,20 @@
+[package]
+name = "serial-client"
+version = "0.1.0"
+authors = ["James Munns <james.munns@ferrous-systems.com>"]
+edition = "2018"
+
+[dependencies]
+postcard = "0.2.0"
+serialport = "3.2.0"
+cobs = "0.1.4"
+chrono = "0.4"
+
+[dependencies.serde]
+version = "1.0.85"
+default-features = false
+features = ["derive"]
+
+[dependencies.protocol]
+path = "../../protocol"
+

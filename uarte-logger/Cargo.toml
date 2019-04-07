@@ -8,6 +8,10 @@ edition = "2018"
 postcard = "0.2"
 heapless = "0.4.2"
 
+[dependencies.cobs]
+version = "0.1.4"
+default-features = false
+
 [dependencies.serde]
 default-features = false
 features = ["derive"]

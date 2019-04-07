@@ -14,6 +14,11 @@ members = [
     "nrf52-hal-backports",
 ]
 
+exclude = [
+    # Desktop applications
+    "pocs/serial-client",
+]
+
 [profile.release]
 opt-level = 's'
 debug = true

@@ -1,7 +1,7 @@
 #![no_std]
 
 use core::marker::PhantomData;
-use core::ops::Deref;
+use core::ops::{Deref, DerefMut};
 
 use nrf52832_hal::{
     uarte::Uarte,
@@ -17,17 +17,13 @@ use heapless::{
     Vec,
 };
 
-use protocol::AllMessages;
+use protocol::{AllMessages, LogOnLine};
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Debug)]
-pub enum LogOnLine<'a> {
-    Log(&'a str),
-    Warn(&'a str),
-    Error(&'a str),
-    BinaryRaw(&'a [u8]),
-    ProtocolMessage(AllMessages),
-}
+use cobs::{
+    max_encoding_length,
+    encode,
+};
 
 pub struct Logger<BUFSZ>
 where
@@ -61,10 +57,19 @@ where
     }
 
     fn send(&mut self, msg: &LogOnLine) -> Result<(), ()> {
-        let out: Vec<u8, BUFSZ> = to_vec(msg).map_err(|_| ())?;
+        let mut encoded: Vec<u8, BUFSZ> = Vec::new();
+        {
+            let out: Vec<u8, BUFSZ> = to_vec(msg).map_err(|_| ())?;
+            encoded.resize(max_encoding_length(out.len()), 0x00)
+                .map_err(|_| ())?;
+            let sz = encode(out.deref(), encoded.deref_mut());
+            encoded.truncate(sz);
+            encoded.push(0);
+            // Okay, we can drop `out` now
+        }
 
         // Remove once nrf52832_hal reaches 0.8.0
-        for c in out.deref().chunks(EASY_DMA_SIZE) {
+        for c in encoded.deref().chunks(EASY_DMA_SIZE) {
             self.uart.write(c).map_err(|_| ())?;
         }
         Ok(())

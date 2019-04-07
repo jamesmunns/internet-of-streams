@@ -104,55 +104,65 @@ const APP: () = {
     fn idle() -> ! {
         let mut scratch = [0u8; 4096];
         loop {
-            let message = DemoMessage::rand(&mut resources.RANDOM);
-
-            let sz = serialize(&mut scratch, &message).expect("ser fail");
-
-            block!(resources.DW1000.send(
-                &scratch[..sz],
-                Address::broadcast(),
-                None
-            ).expect("tx fail").wait()).expect("tx fail block");
-            resources.LOGGER.log("Sent hello").expect("hello fail");
-
-            let mut rx_fut = resources.DW1000.receive().expect("rx fut fail");
-
-            let a_time = 250_000 + (resources.RANDOM.random_u32() & 0x7_FFFF);
-            let b_time = 250_000 + (resources.RANDOM.random_u32() & 0x7_FFFF);
-
-            (*resources.LED_RED_1).set_low();
-            delay(resources.TIMER, a_time);
-            (*resources.LED_RED_1).set_high();
-            delay(resources.TIMER, b_time);
-
-            match rx_fut.wait(&mut scratch) {
-                Ok(msg) => {
-                    match deserialize::<DemoMessage>(msg.frame.payload) {
-                        Ok((val, _)) => {
-                            let mut out: String<U256> = String::new();
-                            write!(&mut out, "got message! \r\n").unwrap();
-                            write!(&mut out, "small: {:016X}\r\n", val.small).unwrap();
-                            write!(&mut out, "med:   {:016X}\r\n", val.medium).unwrap();
-                            write!(&mut out, "large  {:016X}\r\n", val.large).unwrap();
-                            write!(&mut out, "text: {}\r\n", ::core::str::from_utf8(&val.text_bytes).unwrap()).unwrap();
-                            resources.LOGGER.log(out.as_str()).unwrap();
-                        }
-                        _ => {
-                            resources.LOGGER.error("failed to deser").unwrap();
-                        }
-                    }
-                },
-                Err(NbError::WouldBlock) => {
-                    resources.LOGGER.log("No Packet!").expect("no log fail");
-                },
-                Err(e) => {
-                    let mut out: String<U256> = String::new();
-                    write!(&mut out, "rx fail: {:?}", e).unwrap();
-                    resources.LOGGER.error(out.as_str()).unwrap();
-                }
-            }
-
-            resources.DW1000.force_idle().expect("idle fail");
+            let mut out: String<U256> = String::new();
+            write!(&mut out, "got message! \r\n").unwrap();
+            write!(&mut out, "small: {:016X}\r\n", 10).unwrap();
+            write!(&mut out, "med:   {:016X}\r\n", 20).unwrap();
+            write!(&mut out, "large  {:016X}\r\n", 30).unwrap();
+            write!(&mut out, "text: {}\r\n", "Hi there!").unwrap();
+            resources.LOGGER.log(out.as_str()).unwrap();
+            delay(resources.TIMER, 1_000_000);
         }
+        // loop {
+        //     let message = DemoMessage::rand(&mut resources.RANDOM);
+
+        //     let sz = serialize(&mut scratch, &message).expect("ser fail");
+
+        //     block!(resources.DW1000.send(
+        //         &scratch[..sz],
+        //         Address::broadcast(),
+        //         None
+        //     ).expect("tx fail").wait()).expect("tx fail block");
+        //     resources.LOGGER.log("Sent hello").expect("hello fail");
+
+        //     let mut rx_fut = resources.DW1000.receive().expect("rx fut fail");
+
+        //     let a_time = 250_000 + (resources.RANDOM.random_u32() & 0x7_FFFF);
+        //     let b_time = 250_000 + (resources.RANDOM.random_u32() & 0x7_FFFF);
+
+        //     (*resources.LED_RED_1).set_low();
+        //     delay(resources.TIMER, a_time);
+        //     (*resources.LED_RED_1).set_high();
+        //     delay(resources.TIMER, b_time);
+
+        //     match rx_fut.wait(&mut scratch) {
+        //         Ok(msg) => {
+        //             match deserialize::<DemoMessage>(msg.frame.payload) {
+        //                 Ok((val, _)) => {
+        //                     let mut out: String<U256> = String::new();
+        //                     write!(&mut out, "got message! \r\n").unwrap();
+        //                     write!(&mut out, "small: {:016X}\r\n", val.small).unwrap();
+        //                     write!(&mut out, "med:   {:016X}\r\n", val.medium).unwrap();
+        //                     write!(&mut out, "large  {:016X}\r\n", val.large).unwrap();
+        //                     write!(&mut out, "text: {}\r\n", ::core::str::from_utf8(&val.text_bytes).unwrap()).unwrap();
+        //                     resources.LOGGER.log(out.as_str()).unwrap();
+        //                 }
+        //                 _ => {
+        //                     resources.LOGGER.error("failed to deser").unwrap();
+        //                 }
+        //             }
+        //         },
+        //         Err(NbError::WouldBlock) => {
+        //             resources.LOGGER.log("No Packet!").expect("no log fail");
+        //         },
+        //         Err(e) => {
+        //             let mut out: String<U256> = String::new();
+        //             write!(&mut out, "rx fail: {:?}", e).unwrap();
+        //             resources.LOGGER.error(out.as_str()).unwrap();
+        //         }
+        //     }
+
+        //     resources.DW1000.force_idle().expect("idle fail");
+        // }
     }
 };

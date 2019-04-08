@@ -50,7 +50,7 @@ fn main() {
                                         eprintln!("Failed to decode message!");
                                     }
 
-                                    pos = m;
+                                    pos += m;
                                     cobs_buf = vec![0; 2048];
                                     cobs_dec = CobsDecoder::new(cobs_buf.as_mut_slice());
                                 }

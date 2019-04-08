@@ -55,7 +55,9 @@ fn main() {
                                 }
                                 Ok(None) => break 'inner,
                                 Err(e) => {
-                                    eprintln!("Cobs decoding failed at byte: {}", e);
+                                    // TODO: log levels to see errors. These usually happen at the start,
+                                    //   when we have received a bad partial message fragment
+                                    eprintln!("Warning: Cobs decoding failed at byte: {}", pos + e);
                                     cobs_buf = vec![0; 2048];
                                     cobs_dec = CobsDecoder::new(cobs_buf.as_mut_slice());
                                     break 'inner;

@@ -69,7 +69,7 @@ where
             encoded.truncate(sz);
 
             // Add message termination character
-            encoded.push(0);
+            encoded.push(0).map_err(|_| ())?;
 
             // Okay, we can drop `out` now
         }

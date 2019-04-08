@@ -67,7 +67,7 @@ use core::time::Duration;
 const APP: () = {
     static mut LED_RED_1: Pin<Output<PushPull>>     = ();
     static mut TIMER:     Timer<TIMER0>             = ();
-    static mut LOGGER:    Logger                    = ();
+    static mut LOGGER:    Logger<U1024>             = ();
     static mut DW1000:    DW<
                             Spim<SPIM2>,
                             P0_17<Output<PushPull>>,

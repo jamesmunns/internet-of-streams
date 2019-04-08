@@ -3,4 +3,4 @@
 	url = https://github.com/ferrous-systems/cobs.rs.git
 [submodule "vendor/rust-dw1000"]
 	path = vendor/rust-dw1000
-	url = git@github.com:braun-robotics/rust-dw1000.git
+	url = https://github.com/braun-robotics/rust-dw1000.git

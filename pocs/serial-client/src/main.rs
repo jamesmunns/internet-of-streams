@@ -66,7 +66,10 @@ fn main() {
 
                     },
                     Err(ref e) if e.kind() == std::io::ErrorKind::TimedOut => (),
-                    Err(e) => eprintln!("{:?}", e),
+                    Err(e) => {
+                        eprintln!("{:?}", e);
+                        ::std::process::exit(1);
+                    }
                 }
             }
         }
@@ -98,5 +101,6 @@ fn prefixed_lines(st: &str, msg: &str) -> String {
             line
         );
     });
+    out.truncate(out.trim_end().len());
     out
 }

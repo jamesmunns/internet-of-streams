@@ -37,7 +37,10 @@ impl<BUFSZ> Logger<BUFSZ>
 where
     BUFSZ: ArrayLength<u8>,
  {
-    pub fn new(uart: Uarte<UARTE0>) -> Self {
+    pub fn new(mut uart: Uarte<UARTE0>) -> Self {
+        // Send termination character
+        uart.write(&[0x00]);
+
         Self {
             uart,
             _scratch_sz: PhantomData,
@@ -64,7 +67,10 @@ where
                 .map_err(|_| ())?;
             let sz = encode(out.deref(), encoded.deref_mut());
             encoded.truncate(sz);
+
+            // Add message termination character
             encoded.push(0);
+
             // Okay, we can drop `out` now
         }
 

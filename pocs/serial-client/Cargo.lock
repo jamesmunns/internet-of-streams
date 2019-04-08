@@ -172,7 +172,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "postcard"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "byteorder 1.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -254,7 +254,7 @@ version = "0.1.0"
 dependencies = [
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "cobs 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "postcard 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "postcard 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "protocol 0.1.0",
  "serde 1.0.85 (registry+https://github.com/rust-lang/crates.io-index)",
  "serialport 3.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -382,7 +382,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum num-integer 0.1.39 (registry+https://github.com/rust-lang/crates.io-index)" = "e83d528d2677f0518c570baf2b7abdcf0cd2d248860b68507bdcb3e91d4c0cea"
 "checksum num-traits 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)" = "0b3a5d7cc97d6d30d8b9bc8fa19bf45349ffe46241e8816f50f62f6d6aaabee1"
 "checksum pkg-config 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)" = "676e8eb2b1b4c9043511a9b7bea0915320d7e502b0a079fb03f9635a5252b18c"
-"checksum postcard 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ec3d3cdc2e02ecd4058f99527dd00ea41ec717be7122acb135a19a12bee11693"
+"checksum postcard 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "0852fe0396df9419bf85dc3d687a2c0b843d5f55c307c36f8606da8ae60d49b3"
 "checksum proc-macro2 0.4.27 (registry+https://github.com/rust-lang/crates.io-index)" = "4d317f9caece796be1980837fd5cb3dfec5613ebdb04ad0956deea83ce168915"
 "checksum quote 0.6.11 (registry+https://github.com/rust-lang/crates.io-index)" = "cdd8e04bd9c52e0342b406469d494fcb033be4bdbe5c606016defbb1681411e1"
 "checksum redox_syscall 0.1.53 (registry+https://github.com/rust-lang/crates.io-index)" = "53848511b7ee6eb9d5c3db48481aaa5779b38fc0131bc133c98cb4f2b2411928"

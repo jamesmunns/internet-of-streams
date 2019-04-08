@@ -23,7 +23,7 @@ dependencies = [
  "nb 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "nrf52832-pac 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "panic-ramdump 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "postcard 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "postcard 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "protocol 0.1.0",
  "ssmarshal 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "uarte-logger 0.1.0",
@@ -283,7 +283,7 @@ dependencies = [
 
 [[package]]
 name = "postcard"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "byteorder 1.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -483,7 +483,7 @@ dependencies = [
  "cobs 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "heapless 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nrf52832-hal 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "postcard 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "postcard 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "protocol 0.1.0",
  "serde 1.0.85 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -558,7 +558,7 @@ dependencies = [
 "checksum owned-singleton 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "21aa378869c97c7db706a4c576cf0ce8258dc7e0e1ad25a97ee5aba1fd4eed83"
 "checksum owned-singleton-macros 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8d5c2ac071b95017bf70a5b607037fb0ef4abfa663fdf6cac8fbf36af9756ee3"
 "checksum panic-ramdump 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "699e5f8c3ae987deb02e8fea0099145f944b0d94b19efaa72d2d81484c908e4e"
-"checksum postcard 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ec3d3cdc2e02ecd4058f99527dd00ea41ec717be7122acb135a19a12bee11693"
+"checksum postcard 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "0852fe0396df9419bf85dc3d687a2c0b843d5f55c307c36f8606da8ae60d49b3"
 "checksum proc-macro2 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)" = "1b06e2f335f48d24442b35a19df506a835fb3547bc3c06ef27340da9acf5cae7"
 "checksum proc-macro2 0.4.27 (registry+https://github.com/rust-lang/crates.io-index)" = "4d317f9caece796be1980837fd5cb3dfec5613ebdb04ad0956deea83ce168915"
 "checksum quote 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)" = "9949cfe66888ffe1d53e6ec9d9f3b70714083854be20fd5e271b232a017401e8"

@@ -44,11 +44,10 @@ fn main() {
                         'inner: loop {
                             match cobs_dec.push(&buf[pos..t]) {
                                 Ok(Some((n, m))) => {
-                                    if let Ok(msg) = from_bytes::<LogOnLine>(&cobs_buf[..n]) {
-                                        display(&msg);
-                                    } else {
-                                        eprintln!("Failed to decode message!");
-                                    }
+                                    match from_bytes::<LogOnLine>(&cobs_buf[..n]) {
+                                        Ok(msg) => display(&msg),
+                                        Err(e) => eprintln!("Message decode failed: {}", e),
+                                    };
 
                                     pos += m;
                                     cobs_buf = vec![0; 2048];
@@ -56,7 +55,7 @@ fn main() {
                                 }
                                 Ok(None) => break 'inner,
                                 Err(e) => {
-                                    eprintln!("Something went wrong: {:?}", e);
+                                    eprintln!("Cobs decoding failed at byte: {}", e);
                                     cobs_buf = vec![0; 2048];
                                     cobs_dec = CobsDecoder::new(cobs_buf.as_mut_slice());
                                     break 'inner;
@@ -93,10 +92,10 @@ use chrono::prelude::*;
 
 fn prefixed_lines(st: &str, msg: &str) -> String {
     let mut out = String::new();
+    out += &format!("{:?}\n", Local::now());
     st.lines().for_each(|line| {
         out += &format!(
-            "{:?} => {}: {}\n",
-            Local::now().time(),
+            " => {}: {}\n",
             msg,
             line
         );

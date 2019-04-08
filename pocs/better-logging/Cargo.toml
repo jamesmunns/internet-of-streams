@@ -12,7 +12,7 @@ nrf52832-pac    = "0.6.0"
 dw1000          = "0.1.0"
 embedded-hal    = "0.2.2"
 heapless        = "0.4.2"
-postcard        = "0.2.0"
+postcard        = "0.2.1"
 
 [dependencies.ssmarshal]
 version       = "=1.0.0"

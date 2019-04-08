@@ -39,16 +39,13 @@ use ssmarshal::{serialize, deserialize};
 // NOTE: Panic Provider
 use panic_ramdump as _;
 
-// NOTE: Must explicitly pull in for RTFM
-use nrf52832_pac;
-
 // Workspace dependencies
 use protocol::DemoMessage;
 use uarte_logger::Logger;
 use utils::delay;
 
 
-#[app(device = nrf52832_pac)]
+#[app(device = dwm1001::nrf52832_hal::nrf52832_pac)]
 const APP: () = {
     static mut LED_RED_1: Pin<Output<PushPull>>     = ();
     static mut TIMER:     Timer<TIMER0>             = ();

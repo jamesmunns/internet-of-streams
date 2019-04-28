@@ -12,12 +12,12 @@ pub enum AllMessages {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub enum LogOnLine<'a> {
+pub enum LogOnLine<'a, T> {
     Log(&'a str),
     Warn(&'a str),
     Error(&'a str),
     BinaryRaw(&'a [u8]),
-    ProtocolMessage(AllMessages),
+    ProtocolMessage(T),
 }
 
 #[derive(Debug, Deserialize, Serialize)]

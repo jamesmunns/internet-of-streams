@@ -8,6 +8,9 @@ members = [
     "pocs/rtc-poc",
     "pocs/better-logging",
 
+    # Vendored Repos
+    "vendor/cobs.rs",
+
     "uhr",
     "utils",
     "protocol",
@@ -20,7 +23,7 @@ exclude = [
 ]
 
 [profile.release]
-opt-level = 's'
+opt-level = 3
 debug = true
 lto = true
 incremental = false

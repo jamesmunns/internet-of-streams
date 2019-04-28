@@ -5,10 +5,14 @@ authors = ["James Munns <james.munns@ferrous-systems.com>"]
 edition = "2018"
 
 [dependencies]
-postcard = "0.2.1"
 serialport = "3.2.0"
 cobs = "0.1.4"
 chrono = "0.4"
+
+[dependencies.postcard]
+version = "0.2.1"
+git = "https://github.com/jamesmunns/postcard"
+rev = "straight-to-cobs"
 
 [dependencies.serde]
 version = "1.0.85"

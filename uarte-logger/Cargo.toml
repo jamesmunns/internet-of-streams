@@ -5,8 +5,13 @@ authors = ["James Munns <james.munns@ferrous-systems.com>"]
 edition = "2018"
 
 [dependencies]
-postcard = "0.2"
 heapless = "0.4.2"
+
+[dependencies.postcard]
+version = "0.2.1"
+# git = "https://github.com/jamesmunns/postcard"
+# rev = "straight-to-cobs"
+path = "/home/james/ferrous/derse/postcard"
 
 [dependencies.cobs]
 version = "0.1.4"

@@ -5,11 +5,11 @@ authors = ["James Munns <james.munns@ferrous-systems.com>"]
 edition = "2018"
 
 [dependencies]
-panic-ramdump   = "0.1.0"
-nb              = "0.1.1"
-cortex-m-rtfm   = "0.4.1"
+panic-ramdump   = "0.1.1"
+nb              = "0.1.2"
+cortex-m-rtfm   = "0.4.3"
 embedded-hal    = "0.2.2"
-heapless        = "0.4.2"
+heapless        = "0.4.3"
 
 [dependencies.ssmarshal]
 version       = "=1.0.0"

@@ -5,7 +5,6 @@
 use core::fmt::Write;
 
 // Crates.io dependencies
-use dw1000::{DW1000 as DW};
 use dwm1001::{
     self,
     nrf52832_hal::{
@@ -14,7 +13,7 @@ use dwm1001::{
         timer::Timer,
         gpio::{Pin, Output, PushPull, Level, p0::P0_17},
         rng::Rng,
-        spim::{Spim},
+        spim::Spim,
         nrf52832_pac::{
             TIMER0,
             SPIM2,
@@ -22,6 +21,9 @@ use dwm1001::{
     },
     dw1000::{
         mac::Address,
+        mac::frame::AddressMode,
+        DW1000 as DW,
+        Ready,
     },
     new_dw1000,
     new_usb_uarte,
@@ -39,16 +41,13 @@ use ssmarshal::{serialize, deserialize};
 // NOTE: Panic Provider
 use panic_ramdump as _;
 
-// NOTE: Must explicitly pull in for RTFM
-use nrf52832_pac;
-
 // Workspace dependencies
 use protocol::DemoMessage;
 use uarte_logger::Logger;
 use utils::delay;
 
 
-#[app(device = nrf52832_pac)]
+#[app(device = dwm1001::nrf52832_hal::nrf52832_pac)]
 const APP: () = {
     static mut LED_RED_1: Pin<Output<PushPull>>     = ();
     static mut TIMER:     Timer<TIMER0>             = ();
@@ -56,7 +55,7 @@ const APP: () = {
     static mut DW1000:    DW<
                             Spim<SPIM2>,
                             P0_17<Output<PushPull>>,
-                            dw1000::Ready,
+                            Ready,
                           > = ();
     static mut DW_RST_PIN: DW_RST                   = ();
     static mut RANDOM:     Rng                      = ();
@@ -80,13 +79,11 @@ const APP: () = {
             pins.p0_20,
             pins.p0_18,
             pins.p0_17,
+            None,
         );
 
         let mut rst_pin = DW_RST::new(pins.p0_24.into_floating_input());
-
-        let clocks = device.CLOCK.constrain().freeze();
-
-        let mut delay = Delay::new(core.SYST, clocks);
+        let mut delay = Delay::new(core.SYST);
 
         rst_pin.reset_dw1000(&mut delay);
 
@@ -110,7 +107,7 @@ const APP: () = {
 
             block!(resources.DW1000.send(
                 &scratch[..sz],
-                Address::broadcast(),
+                Address::broadcast(&AddressMode::Short),
                 None
             ).expect("tx fail").wait()).expect("tx fail block");
             resources.LOGGER.log("Sent hello").expect("hello fail");

@@ -1,0 +1,32 @@
+[package]
+name = "sparkfun-7seg"
+version = "0.1.0"
+authors = ["James Munns <james.munns@ferrous-systems.com>"]
+edition = "2018"
+
+[dependencies]
+panic-ramdump   = "0.1.1"
+nb              = "0.1.2"
+cortex-m-rtfm   = "0.4.3"
+embedded-hal    = "0.2.2"
+heapless        = "0.4.3"
+postcard        = "0.3.2"
+embedded-timeout-macros = "*"
+
+[dependencies.spark-ser7seg]
+path = "../../spark-ser7seg"
+
+[dependencies.dwm1001]
+version = "0.2.0"
+features = [ "dev", "rt" ]
+
+# Local workspace deps
+
+[dependencies.uarte-logger]
+path = "../../uarte-logger"
+
+[dependencies.utils]
+path = "../../utils"
+
+[dependencies.protocol]
+path = "../../protocol"

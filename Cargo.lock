@@ -552,10 +552,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "sparkfun-7seg"
+name = "spark-ser7seg"
 version = "0.1.0"
 dependencies = [
  "bitflags 1.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "sparkfun-7seg"
+version = "0.1.0"
+dependencies = [
  "cortex-m-rtfm 0.4.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "dwm1001 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "embedded-hal 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -565,6 +572,7 @@ dependencies = [
  "panic-ramdump 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "postcard 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "protocol 0.1.0",
+ "spark-ser7seg 0.1.0",
  "uarte-logger 0.1.0",
  "utils 0.1.0",
 ]

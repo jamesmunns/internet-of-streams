@@ -12,7 +12,9 @@ embedded-hal    = "0.2.2"
 heapless        = "0.4.3"
 postcard        = "0.3.2"
 embedded-timeout-macros = "*"
-bitflags = "1.0"
+
+[dependencies.spark-ser7seg]
+path = "../../spark-ser7seg"
 
 [dependencies.dwm1001]
 version = "0.2.0"

@@ -56,8 +56,7 @@ use uarte_logger::Logger;
 use utils::delay;
 use embedded_timeout_macros::TimeoutError;
 
-mod spark_ser7seg;
-use crate::spark_ser7seg::{SevSegSpim, PunctuationFlags as Punc};
+use spark_ser7seg::{SevSegSpim, PunctuationFlags as Punc};
 
 
 #[app(device = dwm1001::nrf52832_hal::nrf52832_pac)]
@@ -116,7 +115,7 @@ const APP: () = {
     fn idle() -> ! {
         let mut ctr = 0;
 
-        resources.DISPLAY.clear();
+        resources.DISPLAY.clear().unwrap();
 
         // pub struct PunctuationFlags: u8 {
         //     const DOT_BETWEEN_1_AND_2        = 0b0000_0001;

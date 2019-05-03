@@ -1,0 +1,24 @@
+[package]
+name = "spark-ser7seg"
+version = "0.1.0"
+authors = ["James Munns <james.munns@ferrous-systems.com>"]
+edition = "2018"
+
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/ferrous-systems/internet-of-streams"
+documentation = "https://docs.rs/sparkfun-7seg"
+description = "An embedded-hal driver for the SparkFun Serial 7 Segment Display"
+
+categories = [
+    "embedded",
+    "hardware-support",
+    "no-std",
+]
+
+keywords = [
+    "embedded-hal-driver",
+]
+
+[dependencies]
+bitflags = "1.0"
+embedded-hal = "0.2"

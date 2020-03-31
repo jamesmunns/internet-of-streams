@@ -1,6 +1,6 @@
 # Internet of Streams Project
 
-Building a wireless sensor platform from (almost) scratch in Embedded Rustlang. Built with a focus on teaching embedded systems, IoT development, and Rust through live streamed coding sessions. Devices based on the [DWM1001-DEV] board, the [Nordic nRF52] microcontroller, and [Embedded Rust].
+Building a wireless sensor platform from (almost) scratch in Embedded Rust. Built with a focus on teaching embedded systems, IoT development, and Rust through live streamed coding sessions. Devices based on the [DWM1001-DEV] board, the [Nordic nRF52] microcontroller, and [Embedded Rust].
 
 [DWM1001-DEV]: https://www.decawave.com/product/dwm1001-development-board/
 [Embedded Rust]: https://github.com/rust-embedded/wg
